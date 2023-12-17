@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "500945510511",
+    "project_id": "casa-qr",
+    "storage_bucket": "casa-qr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500945510511:android:f4a3712ed83d3be6c66d9a",
+        "android_client_info": {
+          "package_name": "com.casaqr.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWJhhLfpfjCLKI575s9rT-OuBWP1Hn6nA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500945510511:android:d9794b25080fc104c66d9a",
+        "android_client_info": {
+          "package_name": "com.flowner.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWJhhLfpfjCLKI575s9rT-OuBWP1Hn6nA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
