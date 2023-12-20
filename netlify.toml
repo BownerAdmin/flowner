@@ -1,4 +1,4 @@
 [[redirects]]
   from = "/*"
-  to = "/build/web/index.html"
+  to = "index.html"
   status = 200
