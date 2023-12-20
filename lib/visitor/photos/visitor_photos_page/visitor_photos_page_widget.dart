@@ -103,6 +103,78 @@ class _VisitorPhotosPageWidgetState extends State<VisitorPhotosPageWidget> {
           child: Scaffold(
             key: scaffoldKey,
             backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                final selectedMedia = await selectMediaWithSourceBottomSheet(
+                  context: context,
+                  allowPhoto: true,
+                );
+                if (selectedMedia != null &&
+                    selectedMedia.every(
+                        (m) => validateFileFormat(m.storagePath, context))) {
+                  setState(() => _model.isDataUploading = true);
+                  var selectedUploadedFiles = <FFUploadedFile>[];
+
+                  try {
+                    selectedUploadedFiles = selectedMedia
+                        .map((m) => FFUploadedFile(
+                              name: m.storagePath.split('/').last,
+                              bytes: m.bytes,
+                              height: m.dimensions?.height,
+                              width: m.dimensions?.width,
+                              blurHash: m.blurHash,
+                            ))
+                        .toList();
+                  } finally {
+                    _model.isDataUploading = false;
+                  }
+                  if (selectedUploadedFiles.length == selectedMedia.length) {
+                    setState(() {
+                      _model.uploadedLocalFile = selectedUploadedFiles.first;
+                    });
+                  } else {
+                    setState(() {});
+                    return;
+                  }
+                }
+
+                if (_model.uploadedLocalFile != null &&
+                    (_model.uploadedLocalFile.bytes?.isNotEmpty ?? false)) {
+                  await showModalBottomSheet(
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    enableDrag: false,
+                    useSafeArea: true,
+                    context: context,
+                    builder: (context) {
+                      return GestureDetector(
+                        onTap: () => _model.unfocusNode.canRequestFocus
+                            ? FocusScope.of(context)
+                                .requestFocus(_model.unfocusNode)
+                            : FocusScope.of(context).unfocus(),
+                        child: Padding(
+                          padding: MediaQuery.viewInsetsOf(context),
+                          child: AddPhotoBottomSheetWidget(
+                            propertyRef:
+                                visitorPhotosPagePropertiesRecord!.reference,
+                            uploadedFile: _model.uploadedLocalFile,
+                          ),
+                        ),
+                      );
+                    },
+                  ).then((value) => safeSetState(() {}));
+                } else {
+                  return;
+                }
+              },
+              backgroundColor: FlutterFlowTheme.of(context).primary,
+              elevation: 8.0,
+              child: Icon(
+                Icons.add,
+                color: FlutterFlowTheme.of(context).info,
+                size: 24.0,
+              ),
+            ),
             body: Stack(
               children: [
                 Padding(
@@ -229,104 +301,6 @@ class _VisitorPhotosPageWidgetState extends State<VisitorPhotosPageWidget> {
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0.0, 1.0),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 40.0),
-                    child: FFButtonWidget(
-                      onPressed: () async {
-                        final selectedMedia =
-                            await selectMediaWithSourceBottomSheet(
-                          context: context,
-                          allowPhoto: true,
-                        );
-                        if (selectedMedia != null &&
-                            selectedMedia.every((m) =>
-                                validateFileFormat(m.storagePath, context))) {
-                          setState(() => _model.isDataUploading = true);
-                          var selectedUploadedFiles = <FFUploadedFile>[];
-
-                          try {
-                            selectedUploadedFiles = selectedMedia
-                                .map((m) => FFUploadedFile(
-                                      name: m.storagePath.split('/').last,
-                                      bytes: m.bytes,
-                                      height: m.dimensions?.height,
-                                      width: m.dimensions?.width,
-                                      blurHash: m.blurHash,
-                                    ))
-                                .toList();
-                          } finally {
-                            _model.isDataUploading = false;
-                          }
-                          if (selectedUploadedFiles.length ==
-                              selectedMedia.length) {
-                            setState(() {
-                              _model.uploadedLocalFile =
-                                  selectedUploadedFiles.first;
-                            });
-                          } else {
-                            setState(() {});
-                            return;
-                          }
-                        }
-
-                        if (_model.uploadedLocalFile != null &&
-                            (_model.uploadedLocalFile.bytes?.isNotEmpty ??
-                                false)) {
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            enableDrag: false,
-                            useSafeArea: true,
-                            context: context,
-                            builder: (context) {
-                              return GestureDetector(
-                                onTap: () => _model.unfocusNode.canRequestFocus
-                                    ? FocusScope.of(context)
-                                        .requestFocus(_model.unfocusNode)
-                                    : FocusScope.of(context).unfocus(),
-                                child: Padding(
-                                  padding: MediaQuery.viewInsetsOf(context),
-                                  child: AddPhotoBottomSheetWidget(
-                                    propertyRef:
-                                        visitorPhotosPagePropertiesRecord!
-                                            .reference,
-                                    uploadedFile: _model.uploadedLocalFile,
-                                  ),
-                                ),
-                              );
-                            },
-                          ).then((value) => safeSetState(() {}));
-                        } else {
-                          return;
-                        }
-                      },
-                      text: 'Ajouter une photo',
-                      options: FFButtonOptions(
-                        height: 40.0,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            24.0, 0.0, 24.0, 0.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primary,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Readex Pro',
-                                  color: Colors.white,
-                                ),
-                        elevation: 3.0,
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      showLoadingIndicator: false,
                     ),
                   ),
                 ),

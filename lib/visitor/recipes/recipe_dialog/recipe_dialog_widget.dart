@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/visitor/recipes/modify_recipe_bottom_sheet/modify_recipe_bottom_sheet_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -208,84 +209,137 @@ class _RecipeDialogWidgetState extends State<RecipeDialogWidget>
                         ),
                         if (widget.recipe?.creator?.token ==
                             FFAppState().currentUser.token)
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 12.0),
-                              child: FFButtonWidget(
-                                onPressed: () async {
-                                  var confirmDialogResponse =
-                                      await showDialog<bool>(
-                                            context: context,
-                                            builder: (alertDialogContext) {
-                                              return AlertDialog(
-                                                title: Text('Confirmation'),
-                                                content: Text(
-                                                    'Voulez-vous supprimer cette recette ?'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            alertDialogContext,
-                                                            false),
-                                                    child: Text('Annuler'),
+                          Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                FFButtonWidget(
+                                  onPressed: () async {
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: ModifyRecipeBottomSheetWidget(
+                                            propertyRef: widget.propertyRef!,
+                                            initialRecipe: widget.recipe!,
+                                          ),
+                                        );
+                                      },
+                                    ).then((value) => safeSetState(() {}));
+                                  },
+                                  text: 'Modifier',
+                                  options: FFButtonOptions(
+                                    height: 40.0,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        24.0, 0.0, 24.0, 0.0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 0.0, 0.0),
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Readex Pro',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
+                                        ),
+                                    elevation: 3.0,
+                                    borderSide: BorderSide(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      width: 1.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                  child: FFButtonWidget(
+                                    onPressed: () async {
+                                      var confirmDialogResponse =
+                                          await showDialog<bool>(
+                                                context: context,
+                                                builder: (alertDialogContext) {
+                                                  return AlertDialog(
+                                                    title: Text('Confirmation'),
+                                                    content: Text(
+                                                        'Voulez-vous supprimer cette recette ?'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext,
+                                                                false),
+                                                        child: Text('Annuler'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                alertDialogContext,
+                                                                true),
+                                                        child:
+                                                            Text('Confirmer'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ) ??
+                                              false;
+                                      if (confirmDialogResponse) {
+                                        await widget.propertyRef!.update({
+                                          ...mapToFirestore(
+                                            {
+                                              'recipes':
+                                                  FieldValue.arrayRemove([
+                                                getRecipeFirestoreData(
+                                                  updateRecipeStruct(
+                                                    widget.recipe,
+                                                    clearUnsetFields: false,
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            alertDialogContext,
-                                                            true),
-                                                    child: Text('Confirmer'),
-                                                  ),
-                                                ],
-                                              );
+                                                  true,
+                                                )
+                                              ]),
                                             },
-                                          ) ??
-                                          false;
-                                  if (confirmDialogResponse) {
-                                    await widget.propertyRef!.update({
-                                      ...mapToFirestore(
-                                        {
-                                          'recipes': FieldValue.arrayRemove([
-                                            getRecipeFirestoreData(
-                                              updateRecipeStruct(
-                                                widget.recipe,
-                                                clearUnsetFields: false,
-                                              ),
-                                              true,
-                                            )
-                                          ]),
-                                        },
-                                      ),
-                                    });
-                                    Navigator.pop(context);
-                                  }
-                                },
-                                text: 'Supprimer',
-                                options: FFButtonOptions(
-                                  height: 40.0,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      24.0, 0.0, 24.0, 0.0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 0.0, 0.0),
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Readex Pro',
+                                          ),
+                                        });
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    text: 'Supprimer',
+                                    options: FFButtonOptions(
+                                      height: 40.0,
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          24.0, 0.0, 24.0, 0.0),
+                                      iconPadding:
+                                          EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color: FlutterFlowTheme.of(context)
+                                          .primaryBackground,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: FlutterFlowTheme.of(context)
+                                                .error,
+                                          ),
+                                      elevation: 3.0,
+                                      borderSide: BorderSide(
                                         color:
                                             FlutterFlowTheme.of(context).error,
+                                        width: 1.0,
                                       ),
-                                  elevation: 3.0,
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context).error,
-                                    width: 1.0,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                       ],

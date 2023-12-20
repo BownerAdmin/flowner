@@ -977,7 +977,7 @@ class _MyPropertyPageWidgetState extends State<MyPropertyPageWidget> {
                                                         ),
                                                         onPressed: () async {
                                                           await launchURL(
-                                                              'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://bowneradmin.github.io/flowner/scan/${myPropertyPagePropertiesRecord.propertyId.toString()}');
+                                                              'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://app.flowner.fr/scan/${myPropertyPagePropertiesRecord.propertyId.toString()}');
                                                         },
                                                       ),
                                                     ),

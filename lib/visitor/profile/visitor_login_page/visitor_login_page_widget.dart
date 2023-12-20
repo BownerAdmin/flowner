@@ -124,27 +124,17 @@ class _VisitorLoginPageWidgetState extends State<VisitorLoginPageWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              Icons.qr_code_2,
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              size: 30.0,
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  20.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                'Casa QR',
-                                style: FlutterFlowTheme.of(context)
-                                    .titleMedium
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
-                                      fontSize: 30.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
+                            Text(
+                              'FLowner',
+                              style: FlutterFlowTheme.of(context)
+                                  .titleMedium
+                                  .override(
+                                    fontFamily: 'Readex Pro',
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    fontSize: 30.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ],
                         ),

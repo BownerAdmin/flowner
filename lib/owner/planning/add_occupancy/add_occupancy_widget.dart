@@ -374,37 +374,44 @@ class _AddOccupancyWidgetState extends State<AddOccupancyWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         0.0, 24.0, 0.0, 0.0),
                                     child: FFButtonWidget(
-                                      onPressed: () async {
-                                        await widget.propertyRef!.update({
-                                          ...mapToFirestore(
-                                            {
-                                              'occupancy_list':
-                                                  FieldValue.arrayUnion([
-                                                getOccupancyFirestoreData(
-                                                  createOccupancyStruct(
-                                                    startDate: _model
-                                                        .selectedRange?.start,
-                                                    endDate: _model
-                                                        .selectedRange?.end,
-                                                    isFriend:
-                                                        _model.switchValue,
-                                                    name: _model.switchValue!
-                                                        ? _model
-                                                            .textController.text
-                                                        : 'Locataire',
-                                                    nbGuests: _model
-                                                        .sliderValue!
-                                                        .toInt(),
-                                                    clearUnsetFields: false,
-                                                  ),
-                                                  true,
-                                                )
-                                              ]),
+                                      onPressed: _model.newOccupancy == null
+                                          ? null
+                                          : () async {
+                                              await widget.propertyRef!.update({
+                                                ...mapToFirestore(
+                                                  {
+                                                    'occupancy_list':
+                                                        FieldValue.arrayUnion([
+                                                      getOccupancyFirestoreData(
+                                                        createOccupancyStruct(
+                                                          startDate: _model
+                                                              .selectedRange
+                                                              ?.start,
+                                                          endDate: _model
+                                                              .selectedRange
+                                                              ?.end,
+                                                          isFriend: _model
+                                                              .switchValue,
+                                                          name: _model
+                                                                  .switchValue!
+                                                              ? _model
+                                                                  .textController
+                                                                  .text
+                                                              : 'Locataire',
+                                                          nbGuests: _model
+                                                              .sliderValue!
+                                                              .toInt(),
+                                                          clearUnsetFields:
+                                                              false,
+                                                        ),
+                                                        true,
+                                                      )
+                                                    ]),
+                                                  },
+                                                ),
+                                              });
+                                              Navigator.pop(context);
                                             },
-                                          ),
-                                        });
-                                        Navigator.pop(context);
-                                      },
                                       text: 'Valider',
                                       options: FFButtonOptions(
                                         height: 40.0,
@@ -428,6 +435,7 @@ class _AddOccupancyWidgetState extends State<AddOccupancyWidget> {
                                         ),
                                         borderRadius:
                                             BorderRadius.circular(8.0),
+                                        disabledColor: Color(0x83005297),
                                       ),
                                     ),
                                   ),

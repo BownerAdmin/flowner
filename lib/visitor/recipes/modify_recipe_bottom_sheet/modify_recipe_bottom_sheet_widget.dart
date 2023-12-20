@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
-import '/backend/firebase_storage/storage.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -9,6 +8,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/form_field_controller.dart';
 import '/flutter_flow/upload_data.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -259,23 +259,23 @@ class _ModifyRecipeBottomSheetWidgetState
                                           fit: BoxFit.cover,
                                         ),
                                       ),
-                                    if (_model.uploadedLocalFile1 != null &&
-                                        (_model.uploadedLocalFile1.bytes
+                                    if (_model.uploadedLocalFile != null &&
+                                        (_model.uploadedLocalFile.bytes
                                                 ?.isNotEmpty ??
                                             false))
                                       ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                         child: Image.memory(
-                                          _model.uploadedLocalFile1.bytes ??
+                                          _model.uploadedLocalFile.bytes ??
                                               Uint8List.fromList([]),
                                           width: 300.0,
                                           height: 200.0,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
-                                    if ((_model.uploadedLocalFile1 == null ||
-                                            (_model.uploadedLocalFile1.bytes
+                                    if ((_model.uploadedLocalFile == null ||
+                                            (_model.uploadedLocalFile.bytes
                                                     ?.isEmpty ??
                                                 true)) &&
                                         (_model.initialImage == null ||
@@ -309,7 +309,7 @@ class _ModifyRecipeBottomSheetWidgetState
                                                       m.storagePath,
                                                       context))) {
                                             setState(() =>
-                                                _model.isDataUploading1 = true);
+                                                _model.isDataUploading = true);
                                             var selectedUploadedFiles =
                                                 <FFUploadedFile>[];
 
@@ -334,12 +334,12 @@ class _ModifyRecipeBottomSheetWidgetState
                                                               ))
                                                       .toList();
                                             } finally {
-                                              _model.isDataUploading1 = false;
+                                              _model.isDataUploading = false;
                                             }
                                             if (selectedUploadedFiles.length ==
                                                 selectedMedia.length) {
                                               setState(() {
-                                                _model.uploadedLocalFile1 =
+                                                _model.uploadedLocalFile =
                                                     selectedUploadedFiles.first;
                                               });
                                             } else {
@@ -354,9 +354,8 @@ class _ModifyRecipeBottomSheetWidgetState
                               ),
                             ),
                           ),
-                          if ((_model.uploadedLocalFile1 != null &&
-                                  (_model.uploadedLocalFile1.bytes
-                                          ?.isNotEmpty ??
+                          if ((_model.uploadedLocalFile != null &&
+                                  (_model.uploadedLocalFile.bytes?.isNotEmpty ??
                                       false)) ||
                               (_model.initialImage != null &&
                                   _model.initialImage != ''))
@@ -404,10 +403,9 @@ class _ModifyRecipeBottomSheetWidgetState
                                           false;
                                   if (confirmDialogResponse) {
                                     setState(() {
-                                      _model.isDataUploading1 = false;
-                                      _model.uploadedLocalFile1 =
-                                          FFUploadedFile(
-                                              bytes: Uint8List.fromList([]));
+                                      _model.isDataUploading = false;
+                                      _model.uploadedLocalFile = FFUploadedFile(
+                                          bytes: Uint8List.fromList([]));
                                     });
 
                                     setState(() {
@@ -430,108 +428,24 @@ class _ModifyRecipeBottomSheetWidgetState
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            setState(() {
-                              _model.modifiedRecipe = RecipeStruct(
+                            _model.property =
+                                await PropertiesRecord.getDocumentOnce(
+                                    widget.propertyRef!);
+                            await actions.modifyRecipe(
+                              _model.property!.recipes.toList(),
+                              RecipeStruct(
                                 title: _model.textController1.text,
                                 description: _model.textController2.text,
-                                creator: FFAppState().currentUser,
                                 type: _model.dropDownValue,
-                              );
-                            });
-                            if (_model.uploadedLocalFile1 != null &&
-                                (_model.uploadedLocalFile1.bytes?.isNotEmpty ??
-                                    false)) {
-                              {
-                                setState(() => _model.isDataUploading2 = true);
-                                var selectedUploadedFiles = <FFUploadedFile>[];
-                                var selectedMedia = <SelectedFile>[];
-                                var downloadUrls = <String>[];
-                                try {
-                                  selectedUploadedFiles = _model
-                                          .uploadedLocalFile1.bytes!.isNotEmpty
-                                      ? [_model.uploadedLocalFile1]
-                                      : <FFUploadedFile>[];
-                                  selectedMedia =
-                                      selectedFilesFromUploadedFiles(
-                                    selectedUploadedFiles,
-                                  );
-                                  downloadUrls = (await Future.wait(
-                                    selectedMedia.map(
-                                      (m) async => await uploadData(
-                                          m.storagePath, m.bytes),
-                                    ),
-                                  ))
-                                      .where((u) => u != null)
-                                      .map((u) => u!)
-                                      .toList();
-                                } finally {
-                                  _model.isDataUploading2 = false;
-                                }
-                                if (selectedUploadedFiles.length ==
-                                        selectedMedia.length &&
-                                    downloadUrls.length ==
-                                        selectedMedia.length) {
-                                  setState(() {
-                                    _model.uploadedLocalFile2 =
-                                        selectedUploadedFiles.first;
-                                    _model.uploadedFileUrl2 =
-                                        downloadUrls.first;
-                                  });
-                                } else {
-                                  setState(() {});
-                                  return;
-                                }
-                              }
-
-                              setState(() {
-                                _model.updateModifiedRecipeStruct(
-                                  (e) => e..image = _model.uploadedFileUrl2,
-                                );
-                              });
-                            } else {
-                              if (_model.initialImage != null &&
-                                  _model.initialImage != '') {
-                                setState(() {
-                                  _model.updateModifiedRecipeStruct(
-                                    (e) => e..image = _model.initialImage,
-                                  );
-                                });
-                              }
-                            }
-
-                            await widget.propertyRef!.update({
-                              ...mapToFirestore(
-                                {
-                                  'recipes': FieldValue.arrayRemove([
-                                    getRecipeFirestoreData(
-                                      updateRecipeStruct(
-                                        widget.initialRecipe,
-                                        clearUnsetFields: false,
-                                      ),
-                                      true,
-                                    )
-                                  ]),
-                                },
+                                creator: widget.initialRecipe?.creator,
+                                creationDate:
+                                    widget.initialRecipe?.creationDate,
+                                likes: widget.initialRecipe?.likes,
+                                image: widget.initialRecipe?.image,
                               ),
-                            });
+                            );
 
-                            await widget.propertyRef!.update({
-                              ...mapToFirestore(
-                                {
-                                  'recipes': FieldValue.arrayUnion([
-                                    getRecipeFirestoreData(
-                                      updateRecipeStruct(
-                                        _model.modifiedRecipe,
-                                        clearUnsetFields: false,
-                                      ),
-                                      true,
-                                    )
-                                  ]),
-                                },
-                              ),
-                            });
-                            Navigator.pop(context);
-                            Navigator.pop(context);
+                            setState(() {});
                           },
                           text: 'Valider',
                           options: FFButtonOptions(

@@ -437,7 +437,7 @@ class _AdminPageWidgetState extends State<AdminPageWidget> {
                                                 ),
                                                 onPressed: () async {
                                                   await launchURL(
-                                                      'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://bowneradmin.github.io/flowner/scan/${propertiesItem.propertyId.toString()}');
+                                                      'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://app.flowner.fr/scan/${propertiesItem.propertyId.toString()}');
                                                 },
                                               ),
                                             ),
@@ -476,6 +476,49 @@ class _AdminPageWidgetState extends State<AdminPageWidget> {
                                                           propertiesItem
                                                               .propertyId,
                                                           ParamType.int,
+                                                        ),
+                                                      }.withoutNulls,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  1.0, -1.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        12.0, 0.0, 0.0, 0.0),
+                                                child: FlutterFlowIconButton(
+                                                  borderColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .primary,
+                                                  borderRadius: 20.0,
+                                                  borderWidth: 1.0,
+                                                  buttonSize: 40.0,
+                                                  fillColor:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .accent1,
+                                                  icon: Icon(
+                                                    Icons.admin_panel_settings,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText,
+                                                    size: 24.0,
+                                                  ),
+                                                  onPressed: () async {
+                                                    context.pushNamed(
+                                                      'MyPropertyPage',
+                                                      queryParameters: {
+                                                        'propertyRef':
+                                                            serializeParam(
+                                                          propertiesItem
+                                                              .reference,
+                                                          ParamType
+                                                              .DocumentReference,
                                                         ),
                                                       }.withoutNulls,
                                                     );

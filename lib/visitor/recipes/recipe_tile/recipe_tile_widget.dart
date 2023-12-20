@@ -84,7 +84,8 @@ class _RecipeTileWidgetState extends State<RecipeTileWidget>
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 12.0, 12.0),
       child: Container(
-        width: MediaQuery.sizeOf(context).width * 0.5,
+        width: 250.0,
+        height: 200.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).primaryBackground,
           boxShadow: [
@@ -135,7 +136,7 @@ class _RecipeTileWidgetState extends State<RecipeTileWidget>
                         ),
                         child: Image.network(
                           widget.recipe!.image,
-                          width: 300.0,
+                          width: MediaQuery.sizeOf(context).width * 1.0,
                           height: 200.0,
                           fit: BoxFit.cover,
                         ),

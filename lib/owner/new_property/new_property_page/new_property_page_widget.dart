@@ -737,6 +737,8 @@ class _NewPropertyPageWidgetState extends State<NewPropertyPageWidget> {
                                                             style: FlutterFlowTheme
                                                                     .of(context)
                                                                 .bodyMedium,
+                                                            maxLines: null,
+                                                            minLines: 1,
                                                             validator: _model
                                                                 .welcomeMessageFieldControllerValidator
                                                                 .asValidator(

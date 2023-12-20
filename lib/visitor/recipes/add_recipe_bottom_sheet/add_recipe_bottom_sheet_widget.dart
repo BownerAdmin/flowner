@@ -167,7 +167,6 @@ class _AddRecipeBottomSheetWidgetState
                     child: TextFormField(
                       controller: _model.textController2,
                       focusNode: _model.textFieldFocusNode2,
-                      textInputAction: TextInputAction.done,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Description...',
